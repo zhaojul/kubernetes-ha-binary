@@ -1,0 +1,81 @@
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+address: 0.0.0.0
+port: 10250
+readOnlyPort: 0
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 0s
+    enabled: true
+  x509:
+    clientCAFile: /etc/kubernetes/pki/ca.crt
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 0s
+    cacheUnauthorizedTTL: 0s
+cgroupDriver: systemd
+cgroupsPerQOS: true
+clusterDNS:
+- {KUBE_DNS_SVC_IP}
+clusterDomain: {KUBE_DNS_DOMAIN}
+containerLogMaxFiles: 5
+containerLogMaxSize: 20Mi
+contentType: application/vnd.kubernetes.protobuf
+cpuCFSQuota: true
+cpuManagerPolicy: none
+cpuManagerReconcilePeriod: 0s
+enableControllerAttachDetach: true
+enableDebuggingHandlers: true
+allowedUnsafeSysctls:
+- net.core*
+- net.ipv4.*
+enforceNodeAllocatable:
+- pods
+eventBurst: 10
+eventRecordQPS: 5
+evictionHard:
+  imagefs.available: 15%
+  memory.available: 100Mi
+  nodefs.available: 10%
+  nodefs.inodesFree: 5%
+evictionPressureTransitionPeriod: 0s
+failSwapOn: true
+fileCheckFrequency: 0s
+featureGates:
+  RotateKubeletServerCertificate: true
+hairpinMode: promiscuous-bridge
+healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 0s
+imageGCHighThresholdPercent: 85
+imageGCLowThresholdPercent: 80
+imageMinimumGCAge: 0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+kubeAPIBurst: 10
+kubeAPIQPS: 5
+makeIPTablesUtilChains: true
+maxOpenFiles: 1000000
+maxPods: 110
+nodeStatusUpdateFrequency: 0s
+nodeStatusReportFrequency: 0s
+oomScoreAdj: -999
+podPidsLimit: -1
+registryBurst: 10
+registryPullQPS: 20
+resolvConf: /etc/resolv.conf
+rotateCertificates: true
+runtimeRequestTimeout: 0s
+shutdownGracePeriod: 0s
+shutdownGracePeriodCriticalPods: 0s
+serverTLSBootstrap: true
+serializeImagePulls: true
+staticPodPath: ""
+streamingConnectionIdleTimeout: 0s
+syncFrequency: 0s
+volumeStatsAggPeriod: 0s
+
+

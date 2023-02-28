@@ -1,0 +1,32 @@
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/kubernetes/kubernetes
+After=network.target etcd.service kube-apiserver.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/kube-control-plane
+ExecStart=/usr/bin/kube-scheduler \
+  --leader-elect=true \
+  --bind-address=0.0.0.0 \
+  --secure-port=10259 \
+  --tls-cert-file=/etc/kubernetes/pki/kube-scheduler.crt \
+  --tls-private-key-file=/etc/kubernetes/pki/kube-scheduler.key \
+  --kubeconfig=/etc/kubernetes/scheduler.conf \
+  --authentication-kubeconfig=/etc/kubernetes/scheduler.conf \
+  --authorization-kubeconfig=/etc/kubernetes/scheduler.conf \
+  --client-ca-file=/etc/kubernetes/pki/ca.crt \
+  --v=2
+
+Restart=on-failure
+RestartSec=10
+Type=simple
+LimitNOFILE=65535
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kube-scheduler
+
+[Install]
+WantedBy=multi-user.target
+
+

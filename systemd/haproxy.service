@@ -1,0 +1,23 @@
+[Unit]
+Description=HAProxy Load Balancer
+After=network.target syslog.target syslog.service rsyslog.service network.service
+
+[Service]
+Environment="CONFIG=/etc/haproxy/haproxy.cfg" "KUBEAPICFG=/etc/haproxy/conf.d/kubeapi.cfg"  "PIDFILE=/run/haproxy.pid" "EXTRAOPTS=-S /run/haproxy-master.sock"
+ExecStartPre=/usr/sbin/haproxy -f $CONFIG -f $KUBEAPICFG -c -q $EXTRAOPTS
+ExecStart=/usr/sbin/haproxy -Ws -f $CONFIG -f $KUBEAPICFG -p $PIDFILE $EXTRAOPTS
+ExecReload=/usr/sbin/haproxy -f $CONFIG -f $KUBEAPICFG -c -q $EXTRAOPTS
+ExecReload=/bin/kill -USR2 $MAINPID
+SuccessExitStatus=143
+KillMode=mixed
+Restart=always
+Type=notify
+LimitNOFILE=65535
+
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+
+

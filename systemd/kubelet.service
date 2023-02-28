@@ -1,0 +1,31 @@
+[Unit]
+Description=Kubernetes Kubelet Service
+Documentation=https://github.com/kubernetes/kubernetes
+After=network.target network.service rsyslog.service syslog.service containerd.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/kube-node
+ExecStart=/usr/bin/kubelet \
+  --bootstrap-kubeconfig=/var/lib/kubelet/bootstrap-kubeconfig \
+  --kubeconfig=/etc/kubernetes/kubelet.conf \
+  --config=/var/lib/kubelet/config.yaml \
+  --root-dir=/var/lib/kubelet \
+  --cert-dir=/var/lib/kubelet/pki \
+  --container-runtime=remote \
+  --container-runtime-endpoint=unix:///run/containerd/containerd.sock \
+  --hostname-override=${NODE_NAME} \
+  --v=2
+
+Restart=always
+RestartSec=10
+Type=simple
+LimitNOFILE=65535
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kubelet
+
+[Install]
+WantedBy=multi-user.target
+
+

@@ -1,0 +1,11 @@
+/var/log/etcd/etcd.log
+{
+    hourly
+    missingok
+    rotate 30
+    notifempty
+    compress
+    dateext
+    create 0644 root root
+    copytruncate
+}

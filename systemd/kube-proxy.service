@@ -1,0 +1,25 @@
+[Unit]
+Description=Kubernetes Proxy Service
+Documentation=https://github.com/kubernetes/kubernetes
+After=network.target network.service rsyslog.service syslog.service containerd.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/kube-node
+ExecStart=/usr/bin/kube-proxy \
+  --config=/var/lib/kube-proxy/config.yaml \
+  --cluster-cidr="${KUBE_POD_CIDR}" \
+  --v=2
+
+Restart=on-failure
+RestartSec=10
+Type=simple
+LimitNOFILE=65535
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kube-proxy
+
+[Install]
+WantedBy=multi-user.target
+
+

@@ -1,0 +1,16 @@
+/var/log/kubernetes/kube-apiserver-audit.log
+/var/log/kubernetes/kube-apiserver.log
+/var/log/kubernetes/kube-controller-manager.log
+/var/log/kubernetes/kube-scheduler.log
+/var/log/kubernetes/kubelet.log
+/var/log/kubernetes/kube-proxy.log
+{
+    hourly
+    missingok
+    rotate 30
+    notifempty
+    compress
+    dateext
+    create 0644 root root
+    copytruncate
+}
