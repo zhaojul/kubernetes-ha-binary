@@ -40,7 +40,7 @@ NODEPOOLNAME=${NODEPOOLNAME}
 READPAR2 () {
 read -p "请输入HAproxy节点IP地址,该地址会被作为Control Plane Endpoint: " vip
 HAPROXY_IP="${vip}"
-HAPROXY_NAME="k8s-${NODEPOOLNAME}-masterpool-${NODEPOOLID}-loadbalance"
+HAPROXY_NAME="k8s-${NODEPOOLNAME}-masterpool-${NODEPOOLID}-slb"
 
 read -p "请输入MASTER节点地址,三个IP之间以空格隔开: " masterip
 K8S_M1=`echo ${masterip} |cut -d " " -f 1`

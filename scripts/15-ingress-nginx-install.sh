@@ -32,6 +32,9 @@ helm upgrade ingress-nginx \
    --set controller.admissionWebhooks.patch.image.registry="${IMAGE_REGISTRY}" \
    --set controller.admissionWebhooks.patch.image.image="kubelibrary/kube-webhook-certgen" \
    --set controller.admissionWebhooks.patch.image.digest="" \
+   --set controller.metrics.enabled="true" \
+   --set-string controller.podAnnotations."prometheus\.io/scrape"="true" \
+   --set-string controller.podAnnotations."prometheus\.io/port"="10254" \
    --set defaultBackend.enabled="true" \
    --set defaultBackend.name="defaultbackend" \
    --set defaultBackend.image.registry="${IMAGE_REGISTRY}" \
