@@ -199,18 +199,18 @@ cat > ./tmpdir/pki/apiserver-${master_ip}-csr.json <<EOF
 {
   "CN": "kube-apiserver",
   "hosts": [
-    "${MASTER_NAMES[i]}",
     "localhost",
     "kubernetes",
     "kubernetes.default",
     "kubernetes.default.svc",
     "kubernetes.default.svc.cluster",
     "kubernetes.default.svc.cluster.local",
+    "${KUBE_APISERVER_NAME}",
+    "${MASTER_NAMES[i]}",
     "127.0.0.1",
     "${KUBE_SERVICE_IP}",
-    "${MASTER_IPS[i]}",
     "${KUBE_APISERVER_VIP}",
-    "${KUBE_APISERVER_NAME}"
+    "${MASTER_IPS[i]}"
   ],
   "key": {
     "algo": "rsa",
