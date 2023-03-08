@@ -51,7 +51,7 @@
 ```
 git clone https://github.com/kubespaces/kubernetes-ha-install.git
 cd kubernetes-ha-install
-git checkout v1.23.17.1
+git checkout v1.23.17.2
 ./install.sh
 ```
 
@@ -59,15 +59,15 @@ git checkout v1.23.17.1
 
 ### 离线部署
 
-在[Release](https://github.com/kubespaces/kubernetes-ha-install/releases/tag/v1.23.17.1)下载[Source code(tar.gz)](https://github.com/kubespaces/kubernetes-ha-install/archive/refs/tags/v1.23.17.1.tar.gz)并拷贝到部署机解压，本地克隆代码也可以
+在[Release](https://github.com/kubespaces/kubernetes-ha-install/releases/tag/v1.23.17.2)下载[Source code(tar.gz)](https://github.com/kubespaces/kubernetes-ha-install/archive/refs/tags/v1.23.17.2.tar.gz)并拷贝到部署机解压，本地克隆代码也可以
 
 下载下面的文件并拷贝到解压后的代码目录，脚本会检查本地是否有这三个文件，如果有会直接使用这三个文件，不再从网络上下载; 
 
-[kube-component.linux-amd64.tar.gz](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.1/kube-component.linux-amd64.tar.gz)
+[kube-component.linux-amd64.tar.gz](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.2/kube-component.linux-amd64.tar.gz)
 
-[kube-images-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.1/kube-images-all.linux-amd64.tar.gz)
+[kube-images-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.2/kube-images-all.linux-amd64.tar.gz)
 
-[kube-rpm-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.1/kube-rpm-all.linux-amd64.tar.gz)
+[kube-rpm-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.2/kube-rpm-all.linux-amd64.tar.gz)
 
 文件放置位置如下:
 
