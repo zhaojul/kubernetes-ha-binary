@@ -2,10 +2,10 @@
 clear
 echo "------------------------------------------------------------------------------------------------------------------"
 echo " * 你需要配置以下内容:"
-echo " * Kubernetes所需Master集群的IP地址信息,需要三个IP地址(仅支持3节点的Master集群,其他节点数量暂时不支持);"
-echo " * HAproxy节点地址,不能是Kubernete任何节点IP,需要地址不被占用;"
+echo " * Kubernetes集群Master节点IP, Kubernetes集群Node节点IP, 请注意: Master节点数量必须且只能是3个!"
+echo " * Kubernetes Apiserver VIP地址, 可以为云上LB地址,也可以是VM地址, 但需要根据环境实际情况进行选择."
 echo " * Kubernetes集群网路类型,默认calico,可选canal或flannel;"
-echo " * 请确保master节点和node节点的root密码相同."
+echo " * 所有节点的root密码, 请确保VIP节点,master节点,node节点的root密码相同."
 echo "------------------------------------------------------------------------------------------------------------------"
 echo ""
 while true
@@ -38,7 +38,7 @@ NODEPOOLNAME=${NODEPOOLNAME}
 }
 
 READPAR2 () {
-read -p "请输入HAproxy节点IP地址,该地址会被作为Control Plane Endpoint: " vip
+read -p "请输入Kubernetes Apiserver VIP地址,该地址会被作为Control Plane Endpoint: " vip
 HAPROXY_IP="${vip}"
 HAPROXY_NAME="k8s-${NODEPOOLNAME}-masterpool-${NODEPOOLID}-slb"
 
