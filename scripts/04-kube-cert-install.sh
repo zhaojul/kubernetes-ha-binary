@@ -209,7 +209,8 @@ cat > ./tmpdir/pki/apiserver-${master_ip}-csr.json <<EOF
     "127.0.0.1",
     "${KUBE_SERVICE_IP}",
     "${MASTER_IPS[i]}",
-    "${HAPROXY_IP}"
+    "${KUBE_APISERVER_VIP}",
+    "${KUBE_APISERVER_NAME}"
   ],
   "key": {
     "algo": "rsa",
@@ -339,7 +340,7 @@ cfssl gencert -ca=./tmpdir/pki/ca.crt -ca-key=./tmpdir/pki/ca.key -config=./tmpd
 openssl rsa  -in ./tmpdir/pki/kubernetes-admin-key.pem -out ./tmpdir/pki/kubernetes-admin.key
 openssl x509 -in ./tmpdir/pki/kubernetes-admin.pem -out ./tmpdir/pki/kubernetes-admin.crt
 
-kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt --embed-certs=true --server=https://${HAPROXY_IP}:6443 --kubeconfig=./tmpdir/pki/admin.conf
+kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt --embed-certs=true --server=https://${KUBE_APISERVER_NAME}:6443 --kubeconfig=./tmpdir/pki/admin.conf
 kubectl config set-credentials kubernetes-admin --client-certificate=./tmpdir/pki/kubernetes-admin.crt --client-key=./tmpdir/pki/kubernetes-admin.key --embed-certs=true --kubeconfig=./tmpdir/pki/admin.conf
 kubectl config set-context kubernetes-admin@kubernetes --cluster=kubernetes --user=kubernetes-admin --kubeconfig=./tmpdir/pki/admin.conf
 kubectl config use-context kubernetes-admin@kubernetes --kubeconfig=./tmpdir/pki/admin.conf
@@ -421,7 +422,7 @@ cfssl gencert -ca=./tmpdir/pki/ca.crt -ca-key=./tmpdir/pki/ca.key -config=./tmpd
 openssl rsa  -in ./tmpdir/pki/kube-proxy-key.pem -out ./tmpdir/pki/kube-proxy.key
 openssl x509 -in ./tmpdir/pki/kube-proxy.pem -out ./tmpdir/pki/kube-proxy.crt
 
-kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt --embed-certs=true --server=https://${HAPROXY_IP}:6443 --kubeconfig=./tmpdir/pki/kube-proxy.conf
+kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt --embed-certs=true --server=https://${KUBE_APISERVER_NAME}:6443 --kubeconfig=./tmpdir/pki/kube-proxy.conf
 kubectl config set-credentials system:kube-proxy --client-certificate=./tmpdir/pki/kube-proxy.crt --client-key=./tmpdir/pki/kube-proxy.key --embed-certs=true --kubeconfig=./tmpdir/pki/kube-proxy.conf
 kubectl config set-context system:kube-proxy@kubernetes --cluster=kubernetes --user=system:kube-proxy --kubeconfig=./tmpdir/pki/kube-proxy.conf
 kubectl config use-context system:kube-proxy@kubernetes --kubeconfig=./tmpdir/pki/kube-proxy.conf

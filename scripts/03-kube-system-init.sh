@@ -8,7 +8,7 @@ rm -rf ./tmpdir/hosts
 touch ./tmpdir/hosts
 echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4" > ./tmpdir/hosts
 echo "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6" >> ./tmpdir/hosts
-echo "${HAPROXY_IP}  ${HAPROXY_NAME}" >> ./tmpdir/hosts
+echo "${KUBE_APISERVER_VIP}  ${KUBE_APISERVER_NAME}" >> ./tmpdir/hosts
 
 i=0
 for ip in ${MASTER_IPS[@]}
@@ -53,16 +53,30 @@ yum -y install sshpass jq openssl openssh telnet
 if [ ! -f ~/.ssh/id_rsa ]; then
 ssh-keygen -t rsa -P "" -C "Kubernetes-Setup-Tools" -f ~/.ssh/id_rsa
 fi
-for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
+
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+NODE="${KUBE_APISERVER_VIP} ${MASTER_IPS[@]} ${NODE_IPS[@]}"
+else
+NODE="${MASTER_IPS[@]} ${NODE_IPS[@]}"
+fi
+
+for node in ${NODE};
 do
   echo ">>>${node}";
   sshpass -p ${ROOT_PWD} ssh-copy-id -o stricthostkeychecking=no root@${node}
 done
+
 }
 
 do_k8s_install_local_yum() {
 echo ">>>>>> 配置K8S所有节点使用本地YUM源 <<<<<<"
-for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+NODE="${KUBE_APISERVER_VIP} ${MASTER_IPS[@]} ${NODE_IPS[@]}"
+else
+NODE="${MASTER_IPS[@]} ${NODE_IPS[@]}"
+fi
+
+for node in ${NODE};
 do
   echo ">>>>>>>> ${node} <<<<<<";
   scp -r ./kube-rpm-all.linux-amd64.tar.gz root@${node}:/tmp/kube-rpm-all.linux-amd64.tar.gz
@@ -73,7 +87,13 @@ done
 
 do_k8s_install_cn_yum() {
 echo ">>>>>> 配置K8S所有节点使用Tencent Mirror,加速安装 <<<<<<"
-for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+NODE="${KUBE_APISERVER_VIP} ${MASTER_IPS[@]} ${NODE_IPS[@]}"
+else
+NODE="${MASTER_IPS[@]} ${NODE_IPS[@]}"
+fi
+
+for node in ${NODE};
 do
   echo ">>>>>>>> ${node} <<<<<<";
   ssh root@${node} "sed -e 's|^mirrorlist=|#mirrorlist=|g' \
@@ -119,13 +139,19 @@ EOF
 
 echo ">>>>>> 正在为所有节点安装基础的依赖包并修改配置,这需要较长的一段时间 <<<<<<"
 i=0
-for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+NODE="${KUBE_APISERVER_VIP} ${MASTER_IPS[@]} ${NODE_IPS[@]}"
+else
+NODE="${MASTER_IPS[@]} ${NODE_IPS[@]}"
+fi
+
+for node in ${NODE};
 do
   let i++
   echo ">>>>>>>> ${node} 节点环境准备中 <<<<<<";
   ssh -o stricthostkeychecking=no root@${node} "cp -r /etc/hosts /etc/hosts.back"
   scp -r ./tmpdir/hosts root@${node}:/etc/hosts
-  ssh root@${node} "hostnamectl set-hostname `echo ${HAPROXY_NAME} ${MASTER_NAMES[@]} ${NODE_NAMES[@]} | cut -d " " -f $i`"
+  ssh root@${node} "hostnamectl set-hostname `echo ${KUBE_APISERVER_NAME} ${MASTER_NAMES[@]} ${NODE_NAMES[@]} | cut -d " " -f $i`"
   ssh root@${node} "systemctl stop firewalld; systemctl disable firewalld; systemctl stop dnsmasq; systemctl disable dnsmasq; systemctl stop ntpd; systemctl disable ntpd; systemctl stop postfix; systemctl disable postfix;"
   ssh root@${node} "iptables -F && iptables -X && iptables -F -t nat && iptables -X -t nat && iptables -P FORWARD ACCEPT"
   ssh root@${node} "swapoff -a; sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab; setenforce 0"
@@ -168,7 +194,13 @@ wait
 
 
 echo ">>>>>> 升级系统内核,内核版本为${Kernel_Version} <<<<<<"
-for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+NODE="${KUBE_APISERVER_VIP} ${MASTER_IPS[@]} ${NODE_IPS[@]}"
+else
+NODE="${MASTER_IPS[@]} ${NODE_IPS[@]}"
+fi
+
+for node in ${NODE};
 do
 {
   echo ">>> ${node} 升级内核中"
@@ -180,7 +212,13 @@ do
 done
 wait
 
-for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+NODE="${KUBE_APISERVER_VIP} ${MASTER_IPS[@]} ${NODE_IPS[@]}"
+else
+NODE="${MASTER_IPS[@]} ${NODE_IPS[@]}"
+fi
+
+for node in ${NODE};
  do            
     while true
     do 
@@ -204,7 +242,13 @@ for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
 done
 
 
-for node in ${HAPROXY_IP} ${MASTER_IPS[@]} ${NODE_IPS[@]};
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+NODE="${KUBE_APISERVER_VIP} ${MASTER_IPS[@]} ${NODE_IPS[@]}"
+else
+NODE="${MASTER_IPS[@]} ${NODE_IPS[@]}"
+fi
+
+for node in ${NODE};
  do
     while true
     do

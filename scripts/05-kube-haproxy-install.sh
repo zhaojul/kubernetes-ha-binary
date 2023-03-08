@@ -1,6 +1,8 @@
 #!/bin/bash
 . ./.version
 . ./tmpdir/.env
+
+do_config_haproxy() {
 echo ">>>>>> 部署haproxy <<<<<<"
 echo ">>> 生成HAproxy的配置"
 cat > ./tmpdir/kubeapi.cfg << EOF
@@ -23,13 +25,15 @@ backend   apiserver-backend
 #---------------------------------------------------------------------
 
 EOF
+}
 
+do_install_haproxy() {
 echo ">>>>>> 正在导入HAproxy的配置并启动服务 <<<<<<"
-for haproxy_ip in ${HAPROXY_IP};
+for haproxy_ip in ${KUBE_APISERVER_VIP};
   do
     echo ">>> ${haproxy_ip}"
     ssh root@${haproxy_ip} """
-        hostnamectl set-hostname ${HAPROXY_NAME};
+        hostnamectl set-hostname ${KUBE_APISERVER_NAME};
         groupadd -r haproxy
         useradd -r -g haproxy -s /sbin/nologin -d /var/lib/haproxy -c 'haproxy' haproxy
         mkdir -p /var/lib/haproxy /etc/haproxy/conf.d
@@ -49,7 +53,7 @@ for haproxy_ip in ${HAPROXY_IP};
         """
   done
   
-for haproxy_ip in ${HAPROXY_IP};
+for haproxy_ip in ${KUBE_APISERVER_VIP};
  do
   while true
   do
@@ -65,4 +69,10 @@ for haproxy_ip in ${HAPROXY_IP};
   done
 done
 
+}
+
+if [ ${KUBE_APISERVER_VIP_IS_EXTERNAL} = false ]; then
+do_config_haproxy
+do_install_haproxy
+fi
 

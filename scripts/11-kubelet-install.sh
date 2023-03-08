@@ -10,7 +10,7 @@ if [ ${MASTER_IS_WORKER} = true ]; then
     echo ">>> ${node_ip}"
     BOOTSTRAP_TOKEN=`kubeadm token create --description kubelet-bootstrap-token --groups system:bootstrappers:${MASTER_NAMES[i]} --kubeconfig ./tmpdir/pki/admin.conf`
     sleep 5s
-    kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt  --embed-certs=true --server=https://${HAPROXY_IP}:6443 --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
+    kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt  --embed-certs=true --server=https://${KUBE_APISERVER_NAME}:6443 --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
     kubectl config set-credentials kubelet-bootstrap --token=${BOOTSTRAP_TOKEN} --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
     kubectl config set-context default --cluster=kubernetes --user=kubelet-bootstrap --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
     kubectl config use-context default --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
@@ -24,7 +24,7 @@ do
   echo ">>> ${node_ip}"
   BOOTSTRAP_TOKEN=`kubeadm token create --description kubelet-bootstrap-token --groups system:bootstrappers:${NODE_NAMES[i]} --kubeconfig ./tmpdir/pki/admin.conf`
   sleep 5s
-  kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt  --embed-certs=true --server=https://${HAPROXY_IP}:6443 --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
+  kubectl config set-cluster kubernetes --certificate-authority=./tmpdir/pki/ca.crt  --embed-certs=true --server=https://${KUBE_APISERVER_NAME}:6443 --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
   kubectl config set-credentials kubelet-bootstrap --token=${BOOTSTRAP_TOKEN} --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
   kubectl config set-context default --cluster=kubernetes --user=kubelet-bootstrap --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig
   kubectl config use-context default --kubeconfig=./tmpdir/kubelet-bootstrap-${node_ip}.kubeconfig

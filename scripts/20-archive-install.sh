@@ -14,7 +14,7 @@ Compressed archive successfully:
 The following is the information of your cluster:
 
 Kubernetes Name:                        ${CLUSTERNAME}
-Kubernetes Control Plane Endpoint:      https://${HAPROXY_IP}:6443
+Kubernetes Control Plane Endpoint:      https://${KUBE_APISERVER_NAME}:6443
 kubernetes Master IPs:                  ${MASTER_IPS[@]}
 Kubernetes Node IPs:                    ${NODE_IPS[@]}
 Kubernetes Nodepool Name:               ${NODEPOOLNAME}

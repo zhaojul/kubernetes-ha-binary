@@ -3,7 +3,7 @@ clear
 echo "------------------------------------------------------------------------------------------------------------------"
 echo " * 你需要配置以下内容:"
 echo " * Kubernetes集群Master节点IP, Kubernetes集群Node节点IP, 请注意: Master节点数量必须且只能是3个!"
-echo " * Kubernetes Apiserver VIP地址, 可以为云上LB地址,也可以是VM地址, 但需要根据环境实际情况进行选择."
+echo " * Kubernetes Apiserver VIP地址和域名, 可以为云上LB地址,也可以是VM地址, 但需要根据环境实际情况进行选择."
 echo " * Kubernetes集群网路类型,默认calico,可选canal或flannel;"
 echo " * 所有节点的root密码, 请确保VIP节点,master节点,node节点的root密码相同."
 echo "------------------------------------------------------------------------------------------------------------------"
@@ -38,16 +38,37 @@ NODEPOOLNAME=${NODEPOOLNAME}
 }
 
 READPAR2 () {
-read -p "请输入Kubernetes Apiserver VIP地址,该地址会被作为Control Plane Endpoint: " vip
-HAPROXY_IP="${vip}"
-HAPROXY_NAME="k8s-${NODEPOOLNAME}-masterpool-${NODEPOOLID}-slb"
+read -p "请输入Kubernetes Apiserver VIP地址: " vip
+KUBE_APISERVER_VIP="${vip}"
+
+while true
+do
+   read -r -p "Kubernetes Apiserver VIP使用使用外部地址? 公有云SLB或者F5? [Y/N] " ACCEPT
+   case ${ACCEPT} in
+       [yY][eE][sS]|[yY])
+       KUBE_APISERVER_VIP_IS_EXTERNAL="true";
+       read -p "请输入Kubernetes Apiserver VIP 域名: " KUBE_APISERVER_NAME
+       KUBE_APISERVER_NAME=${KUBE_APISERVER_NAME}
+       break;
+       ;;
+       [nN][oO]|[nN])
+       KUBE_APISERVER_VIP_IS_EXTERNAL="false";
+       KUBE_APISERVER_NAME="k8s-${NODEPOOLNAME}-masterpool-${NODEPOOLID}-slb"
+       break;
+       ;;
+       *)
+       echo -e "\033[31mInvalid Input\033[0m";
+       ;;
+  esac
+done
+
 
 read -p "请输入MASTER节点地址,三个IP之间以空格隔开: " masterip
 K8S_M1=`echo ${masterip} |cut -d " " -f 1`
 K8S_M2=`echo ${masterip} |cut -d " " -f 2`
 K8S_M3=`echo ${masterip} |cut -d " " -f 3`
 MASTER_IPS=( ${masterip} )
-if [ "${K8S_M1}x" == "x" ] || [ "${K8S_M2}x" == "x" ] || [ "${K8S_M3}x" == "x" ] || [ "${HAPROXY_IP}x" == "x" ]; then
+if [ "${K8S_M1}x" == "x" ] || [ "${K8S_M2}x" == "x" ] || [ "${K8S_M3}x" == "x" ] || [ "${KUBE_APISERVER_VIP}x" == "x" ]; then
    echo "您输入了空值,请重新输入"
    READPAR2
 fi
@@ -194,9 +215,9 @@ done
 }
 
 CHECKHAPROXY () {
-echo "HAproxy节点IP:                        ${HAPROXY_IP}"
-echo "HAproxy节点Hostname:                  ${HAPROXY_NAME}"
-echo "Kubernetes Control Plane Endpoint:    https://${HAPROXY_IP}:6443"
+echo "HAproxy节点IP:                        ${KUBE_APISERVER_VIP}"
+echo "HAproxy节点Hostname:                  ${KUBE_APISERVER_NAME}"
+echo "Kubernetes Control Plane Endpoint:    https://${KUBE_APISERVER_NAME}:6443"
 }
 
 CHECKMASTER () {
@@ -253,7 +274,7 @@ do
     echo "---------------------------------------------------------------------------"
     echo "* Below is all the information you entered:"
     echo "* Kubernetes Name:                        ${CLUSTERNAME}"
-    echo "* Kubernetes Control Plane Endpoint:      https://${HAPROXY_IP}:6443"
+    echo "* Kubernetes Control Plane Endpoint:      https://${KUBE_APISERVER_NAME}:6443"
     echo "* kubernetes Master IPs:                  ${masterip}"
     echo "* Kubernetes Node IPs:                    ${nodeip}"
     echo "* Kubernetes Nodes root password:         ${ROOT_PWD}"
@@ -286,8 +307,9 @@ cat > ./tmpdir/.env <<EOF
 CLUSTERNAME="${CLUSTERNAME}"
 NODEPOOLNAME="${NODEPOOLNAME}"
 NODEPOOLID="${NODEPOOLID}"
-HAPROXY_NAME="${HAPROXY_NAME}"
-HAPROXY_IP="${HAPROXY_IP}"
+KUBE_APISERVER_NAME="${KUBE_APISERVER_NAME}"
+KUBE_APISERVER_VIP="${KUBE_APISERVER_VIP}"
+KUBE_APISERVER_VIP_IS_EXTERNAL="${KUBE_APISERVER_VIP_IS_EXTERNAL}"
 MASTER_NAMES=( ${MASTER_NAMES} )
 MASTER_IPS=( ${masterip} )
 NODE_NAMES=( ${NODE_NAMES} )
