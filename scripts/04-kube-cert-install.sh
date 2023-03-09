@@ -219,6 +219,7 @@ cat > ./tmpdir/pki/apiserver-${master_ip}-csr.json <<EOF
 }
 EOF
 
+
 cat > ./tmpdir/pki/kube-controller-manager-${master_ip}-csr.json <<EOF
 {
   "CN": "system:kube-controller-manager",

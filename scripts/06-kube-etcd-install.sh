@@ -126,7 +126,7 @@ done
 for etcd_ip in ${MASTER_IPS[@]};
 do
 {
-ssh root@${etcd_ip} "systemctl enable etcd.service --now; sleep 5s;"
+ssh root@${etcd_ip} "systemctl enable etcd.service --now; sleep 10s;"
 ssh root@${etcd_ip} "systemctl status etcd.service; /usr/bin/etcd-check;"
 }&
 done

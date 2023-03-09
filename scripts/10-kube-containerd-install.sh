@@ -9,8 +9,9 @@ else
 NODE="${NODE_IPS[@]}"
 fi
 
-for node in ${NODE}
- do
+for node in ${NODE};
+do
+{
     while true
     do
       RETURN_NUM=`ssh root@${node} 'systemctl status containerd.service > /dev/null; echo "$?"'`
@@ -30,18 +31,21 @@ for node in ${NODE}
           sleep 5s
         fi
    done
+}&
 done
+wait
 
 echo ">>> containerd 安装完成 <<<"
 
 if [ -f ./kube-images-all.linux-amd64.tar.gz ]; then
-  for node in ${NODE}
+ for node in ${NODE};
   do
-   {  
+   {
     scp -r ./kube-images-all.linux-amd64.tar.gz root@${node}:/tmp/kube-images-all.linux-amd64.tar.gz
     ssh root@${node} "cd /tmp; gzip -d kube-images-all.linux-amd64.tar.gz; ctr -n k8s.io image import kube-images-all.linux-amd64.tar; rm -rf kube-images-all.linux-amd64.tar;"
    }&
   done
   wait
 fi
+
 
