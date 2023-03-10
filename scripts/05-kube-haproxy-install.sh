@@ -51,6 +51,7 @@ for haproxy_ip in ${KUBE_APISERVER_VIP};
         haproxy -v
         systemctl enable --now haproxy.service; sleep 3s; systemctl status haproxy.service; sleep 3s; reboot;
         """
+    sleep 10s;
   done
   
 for haproxy_ip in ${KUBE_APISERVER_VIP};
