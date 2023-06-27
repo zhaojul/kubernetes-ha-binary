@@ -20,8 +20,7 @@ helm upgrade kube-state-metrics \
     --install \
     --atomic \
     --set image.repository="${IMAGE_REGISTRY}/kubelibrary/kube-state-metrics" \
-    --set image.tag="v2.5.0" \
     --set podSecurityPolicy.enabled="true" \
     --set hostNetwork="${HOSTNETWORK}" \
-    ./charts/kube-state-metrics/kube-state-metrics-4.16.0.tgz
+    ./charts/kube-state-metrics/kube-state-metrics-4.22.3.tgz
 

@@ -18,17 +18,17 @@
 
 | 组件               | 版本                                                         |
 | :----------------- | :----------------------------------------------------------- |
-| Kubernetes         | v1.23.17                                                     |
-| Haproxy            | 2.6.9                                                        |
+| Kubernetes         | v1.24.15                                                     |
+| Haproxy            | 2.6.14                                                       |
 | Etcd               | v3.5.6                                                       |
 | CoreDNS            | 1.8.7                                                       |
 | CNI                | v1.1.1                                                       |
 | Calico             | v3.24.5                                                    |
-| Flannel            | v0.21.2                                                      |
+| Flannel            | v0.21.5                                                      |
 | Canal              | Flannel: v0.15.1;  Calico: v3.24.5                          |
 | Ingress-nginx      | [4.4.2](https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx/4.4.2) |
-| kube-state-metrics | [4.16.0](https://artifacthub.io/packages/helm/prometheus-community/kube-state-metrics/4.16.0) |
-| metrics-server     | [3.8.2](https://artifacthub.io/packages/helm/metrics-server/metrics-server/3.8.2) |
+| kube-state-metrics | [4.22.3](https://artifacthub.io/packages/helm/prometheus-community/kube-state-metrics/4.22.3) |
+| metrics-server     | [3.8.4](https://artifacthub.io/packages/helm/metrics-server/metrics-server/3.8.4) |
 | csi-driver-nfs     | [v4.1.0](https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts/v4.1.0/csi-driver-nfs-v4.1.0.tgz) |
 | csi-driver-smb     | [v1.9.0](https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/charts/v1.9.0/csi-driver-smb-v1.9.0.tgz) |
 
@@ -51,7 +51,7 @@
 ```
 git clone https://github.com/kubespaces/kubernetes-ha-install.git
 cd kubernetes-ha-install
-git checkout v1.23.17.2
+git checkout v1.24.15.1
 ./install.sh
 ```
 
@@ -59,15 +59,15 @@ git checkout v1.23.17.2
 
 ### 离线部署
 
-在[Release](https://github.com/kubespaces/kubernetes-ha-install/releases/tag/v1.23.17.2)下载[Source code(tar.gz)](https://github.com/kubespaces/kubernetes-ha-install/archive/refs/tags/v1.23.17.2.tar.gz)并拷贝到部署机解压，本地克隆代码也可以
+在[Release](https://github.com/kubespaces/kubernetes-ha-install/releases/tag/v1.24.15.1)下载[Source code(tar.gz)](https://github.com/kubespaces/kubernetes-ha-install/archive/refs/tags/v1.24.15.1.tar.gz)并拷贝到部署机解压，本地克隆代码也可以
 
 下载下面的文件并拷贝到解压后的代码目录，脚本会检查本地是否有这三个文件，如果有会直接使用这三个文件，不再从网络上下载; 
 
-[kube-component.linux-amd64.tar.gz](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.2/kube-component.linux-amd64.tar.gz)
+[kube-component.linux-amd64.tar.gz](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.24.15.1/kube-component.linux-amd64.tar.gz)
 
-[kube-images-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.2/kube-images-all.linux-amd64.tar.gz)
+[kube-images-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.24.15.1/kube-images-all.linux-amd64.tar.gz)
 
-[kube-rpm-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.23.17.2/kube-rpm-all.linux-amd64.tar.gz)
+[kube-rpm-all.linux-amd64](https://github.com/kubespaces/kubernetes-ha-install/releases/download/v1.24.15.1/kube-rpm-all.linux-amd64.tar.gz)
 
 文件放置位置如下:
 

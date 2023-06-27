@@ -20,10 +20,9 @@ helm upgrade metrics-server \
    --install \
    --atomic \
    --set image.repository="${IMAGE_REGISTRY}/kubelibrary/metrics-server" \
-   --set image.tag="v0.6.1" \
    --set hostNetwork.enabled="${HOSTNETWORK}" \
    --set podDisruptionBudget.enabled="true" \
    --set podDisruptionBudget.minAvailable="1" \
    --set podDisruptionBudget.maxUnavailable="0" \
-   ./charts/metrics-server/metrics-server-3.8.2.tgz
+   ./charts/metrics-server/metrics-server-3.8.4.tgz
 
