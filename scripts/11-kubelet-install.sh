@@ -86,8 +86,8 @@ if [ ${MASTER_IS_WORKER} = true ]; then
   for master in ${MASTER_NAMES[@]};
   do
     echo ">>> Add label kubernetes.io/role=agent for ${node}"
-    kubectl --kubeconfig=./tmpdir/pki/admin.conf taint nodes ${master} node-role.kubernetes.io/master=:NoSchedule
-    kubectl --kubeconfig=./tmpdir/pki/admin.conf label nodes ${master} kubernetes.io/role=master
+    kubectl --kubeconfig=./tmpdir/pki/admin.conf taint nodes ${master} node-role.kubernetes.io/control-plane=:NoSchedule
+    kubectl --kubeconfig=./tmpdir/pki/admin.conf label nodes ${master} node-role.kubernetes.io/control-plane=""
   done
 fi
 
