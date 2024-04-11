@@ -94,7 +94,7 @@ fi
 for node in ${NODE_NAMES[@]};
 do 
   echo ">>> Add label kubernetes.io/role=agent for ${node}"
-  kubectl --kubeconfig=./tmpdir/pki/admin.conf label nodes ${node} kubernetes.io/role=agent
+  kubectl --kubeconfig=./tmpdir/pki/admin.conf label nodes ${node} node-role.kubernetes.io/agent=""
 done
 
 kubectl --kubeconfig=./tmpdir/pki/admin.conf get node -o wide
